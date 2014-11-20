@@ -41,3 +41,12 @@ Icon
 Network Trash Folder
 Temporary Items
 .apdisk
+
+#Powerpoint
+*.pptx
+*.ppt
+
+#Python
+*.pyc
+
+test_output
