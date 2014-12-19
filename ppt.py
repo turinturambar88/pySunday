@@ -1,10 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Wed Nov 19 21:16:49 2014
-
-@author: Zach
-"""
-
 
 #Standard Library Imports
 import os
