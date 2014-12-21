@@ -19,7 +19,6 @@ class ESV:
             'include-heading-horizontal-lines=0',
             'include-headings=0',
             'include-subheadings=0',
-
         ]
         self.options = '&'.join(options)
         self.options += 'line-length=' + str(line_length)
@@ -30,7 +29,13 @@ class ESV:
         url = self.base_url + '&passage=' + passage + '&' + self.options
         page = urllib.urlopen(url)
         self.result = page.read()
-        return self.result
+        
+        lines = self.result.split('\r\n')
+        blocks = []
+        #11 lines max
+        
+        
+        
 
 
 if __name__ == '__main__':

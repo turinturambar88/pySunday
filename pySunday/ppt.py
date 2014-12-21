@@ -77,7 +77,7 @@ class TextboxFormat:
     """
     
     """
-    def __init__(self, left, top, width, height, font_name = 'Arial', font_size = 12, alignment = alignLeft, color = RGB(0, 0, 0), bold = False, italic = False, underline = False):
+    def __init__(self, left, top, width, height, font_name = 'Arial', font_size = 12, alignment = alignLeft, color = RGB(0, 0, 0), bold = False, italic = False, underline = False, shadow = False):
         self.left = left * inches_to_points
         self.top = top * inches_to_points
         self.width = width * inches_to_points
@@ -89,6 +89,7 @@ class TextboxFormat:
         self.bold = bold
         self.italic = italic
         self.underline = underline
+        self.shadow = shadow
 
 class PPTPres:
     """
@@ -117,7 +118,7 @@ class PPTPres:
                                                    )
 
 
-    def add_slide(self, slide_num = None, layout = ppLayoutBlank, source_slide = None):
+    def add_slide(self, slide_num = None, layout = ppLayoutBlank, source_slide = None, master = None):
         """
         :param slide_num: Location to add new slide.  If not provided, new slide will be added at end of presentation
         :type slide_num: int
@@ -135,6 +136,9 @@ class PPTPres:
             print source_slide
             self.pres.Slides(source_slide).Copy()
             self.pres.Slides.Paste(Index = slide_num)
+
+        if master is not None:
+            self.pres.Slides(slide_num).CustomLayout = self.pres.Designs(1).SlideMaster.CustomLayouts(master)
 
     def add_picture(self, slide_num, fname, pic_format):
         """
@@ -194,6 +198,8 @@ class PPTPres:
         textbox.TextFrame.TextRange.Font.Bold = text_format.bold
         textbox.TextFrame.TextRange.Font.Italic = text_format.italic
         textbox.TextFrame.TextRange.Font.Underline = text_format.underline
+        textbox.TextFrame.TextRange.Font.Shadow = text_format.shadow
+        
 
 
     def delete_slide(self, slide_num):
