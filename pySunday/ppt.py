@@ -19,6 +19,7 @@ ppLayoutBlank = 12
 alignLeft = 1 
 alignCenter = 2
 alignRight = 3
+alignJustify = 4
 
 def RGB(red, green, blue):
     """
@@ -138,7 +139,7 @@ class PPTPres:
             self.pres.Slides.Paste(Index = slide_num)
 
         if master is not None:
-            self.pres.Slides(slide_num).CustomLayout = self.pres.Designs(1).SlideMaster.CustomLayouts(master)
+            self.pres.Slides(slide_num).Design = self.pres.Designs(master)
 
     def add_picture(self, slide_num, fname, pic_format):
         """
@@ -231,6 +232,10 @@ class PPTPres:
             os.makedirs(outdir)
         self.pres.Export(Path = outdir, FilterName = 'PNG')
 
+    def insert_slides(self, slide_num, source_file):
+        """
+        """
+        self.pres.InsertFromFile(source_file, slide_num)
 
 if __name__ == '__main__':
     #Development testing

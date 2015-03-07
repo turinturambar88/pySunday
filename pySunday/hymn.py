@@ -24,8 +24,12 @@ class Hymn:
         if full_page.ok is True:
             soup = BeautifulSoup(full_page.text)
             hymn_page = soup.find('div', {'class': 'hymnpage'})
+            
             hymn_title = hymn_page.find('h2', {'class':'hymntitle'})
             self.title = hymn_title.text
+            self.title = re.sub(self.number+'. ','',self.title)
+            self.title += '\nHymn #' + self.number
+
             hymn_text = hymn_page.find('div', {'id':'text'})
             if hymn_text is not None:
                 self.text = hymn_text.text

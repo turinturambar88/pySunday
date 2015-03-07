@@ -19,7 +19,7 @@ hymn_title_format = ppt.TextboxFormat(
     color = ppt.RGB(255,255,255), italic = True
 )
 hymn_body_format = ppt.TextboxFormat(
-    left = 0.15, top = 1.25, width = 9.7, height = 6, 
+    left = 0.15, top = 1.5, width = 9.7, height = 6, 
     font_name = 'Gill Sans MT', alignment = ppt.alignCenter, font_size = 36,
     color = ppt.RGB(255,255,255), bold = True
 )
@@ -30,7 +30,7 @@ scripture_title_format = ppt.TextboxFormat(
 )
 scripture_body_format = ppt.TextboxFormat(
     left = 0.5, top = 1.25, width = 9, height = 5.9, 
-    font_name = 'Tahoma',alignment = ppt.alignCenter, font_size = 32, 
+    font_name = 'Tahoma',alignment = ppt.alignJustify, font_size = 32, 
     color = ppt.RGB(255,255,255), shadow = True
 )
 
@@ -70,8 +70,11 @@ class SundaySlides:
         """
         """
         self.esv_api.get_text_passage(reference)
-        print self.esv_api.result 
-        
+        for block in self.esv_api.blocks:
+            self.powerpoint.add_slide(master = templates['red'])
+            slide_num = self.powerpoint.pres.Slides.Count
+            self.powerpoint.add_textbox(slide_num, reference, scripture_title_format)
+            self.powerpoint.add_textbox(slide_num, '\r\n'.join(block), scripture_body_format)
         #blank slide after scripture        
         self._blank_slide()
     
