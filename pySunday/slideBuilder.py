@@ -74,7 +74,7 @@ class SundaySlides:
             self.powerpoint.add_slide(master = templates['red'])
             slide_num = self.powerpoint.pres.Slides.Count
             self.powerpoint.add_textbox(slide_num, reference, scripture_title_format)
-            self.powerpoint.add_textbox(slide_num, '\r\n'.join(block), scripture_body_format)
+            self.powerpoint.add_textbox(slide_num, block, scripture_body_format)
         #blank slide after scripture        
         self._blank_slide()
     

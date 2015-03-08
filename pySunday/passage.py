@@ -2,6 +2,7 @@
 
 #Standard Library Imports
 import urllib
+import re
 
 #Anaconda Imports
 
@@ -9,7 +10,7 @@ import urllib
 
 
 class ESV:
-    def __init__(self, line_length = 42):
+    def __init__(self, line_length = 0):
         self.base_url = 'http://www.esvapi.org/v2/rest/verse?key=IP'
         options = [
             'include-passage-references=0',
@@ -25,7 +26,6 @@ class ESV:
         self.options = '&'.join(options)
         self.options += '&line-length=' + str(line_length)
         self.result = ''
-        self.num_rows = 10
 
     def get_text_passage(self, passage):
         passage = '+'.join(passage.split())
@@ -37,14 +37,42 @@ class ESV:
         #Format 
         self.result = self.result.replace('[','')
         self.result = self.result.replace(']',' ')
+        self.result = self.result.replace('\n\n','\n')
         
-        lines = self.result.split('\n')
+        self.split_into_blocks()
+
+    def split_into_blocks(self):        
+        """
+        Split into blocks to fill individual powerpoint slides
+        """
+        self.words = self.result.split(' ')
+        
         self.blocks = []
+        block_start = 0
+        block_end = 0
+        block_length = 0
         
-        for i, line in enumerate(lines):
-            if i % self.num_rows == 0:
-                self.blocks.append([])
-            self.blocks[-1].append(line)
+        screen_length_max = 475 #max characters on a screen
+        screen_length_buffer = 75 #allow stopping this many characters early if a sentence ends        
+        
+        for word in self.words:
+            block_end += 1
+            block_length += len(word) + 1
+            if '\n' in word:
+                #Special case...poetry or end of paragraph...account for extra space used
+                block_length += 20                
+            end_of_sentence = (re.search('[\?\!\.\;\"\']',word) is not None)
+
+            inside_buffer = block_length >= (screen_length_max - screen_length_buffer)
+
+            if (end_of_sentence and inside_buffer) or (block_length >= screen_length_max):            
+                self.blocks.append(' '.join(self.words[block_start:block_end]))
+                block_start = block_end
+                block_length = 0
+        else:
+            #Final screen
+            self.blocks.append(' '.join(self.words[block_start:]))
+
 
 
 if __name__ == '__main__':
@@ -52,3 +80,7 @@ if __name__ == '__main__':
     esv_api = ESV()
     print esv_api.get_text_passage("John 3-5:3")
 
+    esv_api2 = ESV()
+    esv_api2.get_text_passage("James 3:13-17")
+    print esv_api2.result    
+    print esv_api2.blocks
