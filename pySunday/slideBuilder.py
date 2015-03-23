@@ -1,6 +1,6 @@
 
 #Standard Library Imports
-
+import os
 
 #Anaconda Imports
 
@@ -53,6 +53,14 @@ class SundaySlides:
     
     def add_hymn(self, hymn_number):
         """
+        Look up a hymn from http://www.hymnary.org/hymn/TH1990/ and create
+        new PowerPoint slides.
+        
+        Not all hymns are available, some are missing verses, and hymns
+        that include a refrain will work poorly.
+        
+        This method should only be used if a PowerPoint version of the hymn
+        does not already exist.  Use "add_song" method if it does exist.
         """        
         my_hymn = hymn.Hymn(hymn_number) 
         my_hymn.scrape()
@@ -68,6 +76,11 @@ class SundaySlides:
 
     def add_scripture(self, reference):
         """
+        Look up scripture from http://www.esvapi.org/ and create new PowerPoint
+        slides.
+        
+        You will likely have to clean up slides as the text will overflow in 
+        some cases, or leave slides fairly empty in others.
         """
         self.esv_api.get_text_passage(reference)
         for block in self.esv_api.blocks:
@@ -78,11 +91,32 @@ class SundaySlides:
         #blank slide after scripture        
         self._blank_slide()
     
+    def add_song(self, filename):
+        """
+        Insert an existing powerpoint song.  
+        
+        This should be the preferred way to add songs 
+        (once complete...NOT YET IMPLEMENTED)
+        """
+        if os.path.isfile(filename):
+            pass            
+            #Open file to copy from
+            #Select all slides & copy
+            #Paste into existing presentation
+        else:
+            print "File not found to add song: " + filename
+            #Add placeholder slide and note that song is missing                    
+            self.powerpoint.add_slide(master = templates['black'])
+            slide_num = self.powerpoint.pres.Slides.Count
+            self.powerpoint.add_textbox(
+                slide_num, 
+                "File not found: " + filename, 
+                hymn_title_format
+            )
+    
     def save(self):
         """
         """
-         
-        
         
         #Delete template slides from front of presentation
         self.powerpoint.delete_slide(1)        
